@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BlueTriage Report</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --card: #121a33;
+        --text: #e7eaf3;
+        --muted: #aab2d5;
+        --border: rgba(255, 255, 255, 0.12);
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+        background: linear-gradient(180deg, #0b1020, #070b16);
+        color: var(--text);
+      }
+
+      .container {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+
+      header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        font-size: 28px;
+        margin: 0;
+        letter-spacing: 0.3px;
+      }
+
+      .meta {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin: 16px 0 22px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        background: rgba(18, 26, 51, 0.9);
+        border-radius: 14px;
+        padding: 12px 14px;
+      }
+
+      .pill .label {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+
+      .pill .value {
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .card {
+        background: rgba(18, 26, 51, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .badge {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+      }
+
+      .badge.low {
+        background: rgba(34, 197, 94, 0.18);
+      }
+      .badge.medium {
+        background: rgba(245, 158, 11, 0.18);
+      }
+      .badge.high {
+        background: rgba(239, 68, 68, 0.18);
+      }
+
+      .kv {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 8px 12px;
+        margin-top: 10px;
+        color: var(--text);
+      }
+
+      .k {
+        color: var(--muted);
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .tag {
+        font-size: 12px;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      details {
+        margin-top: 12px;
+        border-top: 1px dashed var(--border);
+        padding-top: 12px;
+      }
+
+      summary {
+        cursor: pointer;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      pre {
+        margin: 10px 0 0;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.35);
+        overflow: auto;
+        font-size: 12px;
+        color: #d7defa;
+      }
+
+      ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+        color: var(--text);
+      }
+
+      footer {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>BlueTriage Report</h1>
+      <div class="meta">Total alerts: {{ total_alerts }}</div>
+    </header>
+
+    <!-- Summary by severity (loop-safe counters) -->
+    {% set ns = namespace(low=0, medium=0, high=0) %}
+    {% for a in alerts %}
+      {% set sev = (a.severity | default("low") | string | lower | trim) %}
+      {% if sev == "low" %}{% set ns.low = ns.low + 1 %}{% endif %}
+      {% if sev == "medium" %}{% set ns.medium = ns.medium + 1 %}{% endif %}
+      {% if sev == "high" %}{% set ns.high = ns.high + 1 %}{% endif %}
+    {% endfor %}
+
+    <section class="summary">
+      <div class="pill">
+        <div class="label">HIGH</div>
+        <div class="value">{{ ns.high }}</div>
+      </div>
+      <div class="pill">
+        <div class="label">MEDIUM</div>
+        <div class="value">{{ ns.medium }}</div>
+      </div>
+      <div class="pill">
+        <div class="label">LOW</div>
+        <div class="value">{{ ns.low }}</div>
+      </div>
+      <div class="pill">
+        <div class="label">TOTAL</div>
+        <div class="value">{{ total_alerts }}</div>
+      </div>
+    </section>
+
+    <section class="list">
+      {% for a in alerts %}
+        {% set sev = (a.severity | default("low") | string | lower | trim) %}
+        <article class="card">
+          <div class="title-row">
+            <h2>
+              {{ a.title }}
+              <span style="color: var(--muted); font-weight: 600;">({{ a.rule_id }})</span>
+            </h2>
+            <span class="badge {{ sev }}">{{ sev }}</span>
+          </div>
+
+          <div class="kv">
+            <div class="k">MITRE</div>
+            <div class="v">{{ a.mitre or "N/A" }}</div>
+
+            <div class="k">Reason</div>
+            <div class="v">{{ a.reason }}</div>
+
+            <div class="k">Event</div>
+            <div class="v">
+              {{ a.event.event_id }} | {{ a.event.timestamp }} | {{ a.event.host }}
+            </div>
+          </div>
+
+          {% if a.tags %}
+            <div class="tags">
+              {% for t in a.tags %}
+                <span class="tag">{{ t }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if a.next_steps %}
+            <details open>
+              <summary>Next steps</summary>
+              <ul>
+                {% for s in a.next_steps %}
+                  <li>{{ s }}</li>
+                {% endfor %}
+              </ul>
+            </details>
+          {% endif %}
+
+          <details>
+            <summary>Raw event</summary>
+            <pre>{{ a.event.raw }}</pre>
+          </details>
+        </article>
+      {% endfor %}
+    </section>
+
+    <footer>Generated by BlueTriage</footer>
+  </div>
+</body>
+</html>

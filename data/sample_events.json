@@ -1,0 +1,44 @@
+[
+  {
+    "timestamp": "2025-12-28T10:05:11Z",
+    "event_id": 4625,
+    "host": "LAB-PC01",
+    "user": "admin",
+    "source_ip": "10.0.0.55",
+    "message": "An account failed to log on."
+  },
+  {
+    "timestamp": "2025-12-28T10:07:45Z",
+    "event_id": 4624,
+    "host": "LAB-PC01",
+    "user": "javi",
+    "source_ip": "10.0.0.10",
+    "message": "An account was successfully logged on."
+  }
+  ,
+{
+  "timestamp": "2025-12-28T10:12:00Z",
+  "event_id": 4720,
+  "host": "LAB-DC01",
+  "user": "Administrator",
+  "source_ip": "10.0.0.10",
+  "message": "A user account was created: temp_support"
+},
+{
+  "timestamp": "2025-12-28T10:13:10Z",
+  "event_id": 4728,
+  "host": "LAB-DC01",
+  "user": "Administrator",
+  "source_ip": "10.0.0.10",
+  "message": "A member was added to a security-enabled global group: Domain Admins"
+},
+{
+  "timestamp": "2025-12-28T10:20:05Z",
+  "event_id": 4698,
+  "host": "LAB-PC01",
+  "user": "admin",
+  "source_ip": "10.0.0.55",
+  "message": "A scheduled task was created: UpdateCheck"
+}
+
+]
