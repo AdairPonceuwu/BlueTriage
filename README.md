@@ -18,7 +18,7 @@ BlueTriage is a Windows log triage mini-engine:
 | WIN-4698 | 4698 | High | T1053.005 |
 
 ## Report preview
-![Report](docs/screenshots/report.png)
+![Report](docs/screenshots/report.jpg)
 
 ## Roadmap
 - [ ] Support EVTX ingestion (Windows Event Log export)
