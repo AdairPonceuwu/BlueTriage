@@ -5,6 +5,7 @@ from ..models import Alert
 
 SEV_ORDER = {"high": 0, "medium": 1, "low": 2}
 
+
 def render_html(alerts: list[Alert], out_path: Path) -> None:
     # Sort alerts by severity (high -> low)
     alerts_sorted = sorted(
