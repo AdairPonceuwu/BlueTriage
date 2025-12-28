@@ -8,7 +8,7 @@ def test_sample_events_generate_4_alerts():
     from bluetriage.rules.builtin_rules import run_all_rules
 
     alerts = run_all_rules(events)
-    assert len(alerts) >= 4 
+    assert len(alerts) >= 4
 
 
 def test_failed_logon_rule_present():

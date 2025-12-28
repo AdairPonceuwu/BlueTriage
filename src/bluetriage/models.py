@@ -13,6 +13,7 @@ class NormalizedEvent(BaseModel):
     message: Optional[str] = None
     raw: dict[str, Any] = Field(default_factory=dict)
 
+
 class Alert(BaseModel):
     rule_id: str
     title: str
